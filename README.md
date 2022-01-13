@@ -46,10 +46,13 @@ These methods are proven to be ineffective [rfc4987, 2007] since the attacker co
   -  By handling the 3-way handshake on the firewall side and passing the connection via proxy to server [rfc4987, 2007].
   
 # Newly added section
-## P4 programmable dataplane
-Programmable dataplanes (PDP) enables network operators with a tool to change/modify the purpose of a network switch. 
+## P4 programmable data plane
+Programmable data planes (PDP) enables network operators with a tool to change/modify the purpose of a network switch. 
 
 Traditionally a SDN would handle packet forwarding but with a PDP the hardware gets utilized for this purpose with a significant increase in performance [Jacobs, 2019].
+
+### PPPP - Alien sounds or revolutionary developer tool?
+P4 is a programming language for controlling packet forwarding planes in network devices. It is open source and maintained by P4 Language Consortium (https://p4.org/) and acronym PPPP stands for Programming Protocol-Independent Packet Processors.
 
 ### Putting the pro in programmable - advantages of PDP
 * Check and modify packet headers s.t custom requirements [Gao, 2021].
@@ -80,7 +83,7 @@ Traditionally a SDN would handle packet forwarding but with a PDP the hardware g
 * Network Security
   - Instrusion detection
   - Encryption
-  - DDos attack mitigation
+  - DDos attack mitigation [project focus]
   - Topology scrammingling
 * Network Accelerated Computing
   - Machine learning
@@ -94,6 +97,8 @@ todo
 
 
 ## Sources
+[A Review of P4 Programmable Data Planes for Network Security, Ya Geo, Zhenling Wang](https://downloads.hindawi.com/journals/misy/2021/1257046.pdf)
+
 [Me Love (SYN-)Cookies: SYN Flood Mitigation in Programmable Data Planes, Scholz Et Al.](https://arxiv.org/pdf/2003.03221.pdf)
 
 [TCP SYN Flooding Attacks and Common Mitigations, RFC4987](https://datatracker.ietf.org/doc/html/rfc4987)
@@ -102,7 +107,6 @@ todo
 
 [What are Syn Cookies and how are they used?, A10 Networks](https://youtu.be/ymttSrEo0R0)
 
-[A Review of P4 Programmable Data Planes for Network Security, Ya Geo, Zhenling Wang](https://downloads.hindawi.com/journals/misy/2021/1257046.pdf)
 
 [What is a programmable data plane and where does P4 fit in?, David Jacobs](https://www.techtarget.com/searchnetworking/answer/What-is-a-programmable-data-plane-and-where-does-P4-fit-in)
 
