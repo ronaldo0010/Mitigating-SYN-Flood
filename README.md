@@ -21,6 +21,7 @@ This process is the 3-way handshake to establish a Client-Server connection [Fox
 * The server acknowledges by sending a TCP SYN ACK packet and continues waiting for the client's response.
 * The client continues sending these TCP/IP requests to establish various TCP connections.
 * Indefinitely, the server can run out of resources allocated to these connections - resulting in deadlock, and possible valid TCP connections being dropped.
+  [Scholz, 2020]
 
 ## Traditional SYN-Attack Mitigation Stragtegies
 ### Naive Strategies
@@ -45,17 +46,61 @@ These methods are proven to be ineffective [rfc4987, 2007] since the attacker co
   -  By handling the 3-way handshake on the firewall side and passing the connection via proxy to server [rfc4987, 2007].
   
 
-## Why use a P4 programmable dataplane? 
-todo
+## P4 programmable dataplane
+Programmable dataplanes (PDP) enables network operators with a tool to change/modify the purpose of a network switch. 
 
+Traditionally a SDN would handle packet forwarding but with a PDP the hardware gets utilized for this purpose with a significant increase in performance [Jacobs, 2019].
+
+### Putting the pro in programmable - advantages of PDP
+* Check and modify packet headers s.t custom requirements [Gao, 2021].
+* Encapsulate and forward packets with a non-IP protocol defined via an IP network [Jacobs, 2019].
+* Utilize hardware speeds (100 Gb/s) to perform tasks.
+* Load balancing, limiting ingress (?) speeds, comms with other devices via controller [Geo, 2021].
+* More Cost-effective (time and monetary) than purpose spesific chips.
+* Adaptable for new application scenarios.
+
+### Limitations of PDP's
+  
+
+### Note worthy mentions - Use cases for PDP's
+* Traffic Measurement and -Engineering
+  - Congestion detection
+  - Active queue management
+  - Load balancing
+* Routing and Forwarding
+  - L4 load balancing
+  - Source routing
+  - Named data networking
+* Advanced Network Support
+  - 5G networks
+  - IoT
+  - Time-sensitive networks  
+* Network Security
+  - Instrusion detection
+  - Encryption
+  - DDos attack mitigation
+  - Topology scrammingling
+* Network Accelerated Computing
+  - Machine learning
+  - Deep [packet (?)] detection
+
+[Geo, 2021]
+  
 
 ## P4 SYN-Attack Mitigation Stragtegies
 todo
 
 
 ## Sources
-[Transmission Control Protocol (TCP)](https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:the-internet/xcae6f4a7ff015e7d:transporting-packets/a/transmission-control-protocol--tcp)
+[Me Love (SYN-)Cookies: SYN Flood Mitigation in Programmable Data Planes, Scholz Et Al.](https://arxiv.org/pdf/2003.03221.pdf)
 
-[RFC4987 - TCP SYN Flooding Attacks and Common Mitigations](https://datatracker.ietf.org/doc/html/rfc4987)
+[TCP SYN Flooding Attacks and Common Mitigations, RFC4987](https://datatracker.ietf.org/doc/html/rfc4987)
 
-[What are Syn Cookies and how are they used?] (https://youtu.be/ymttSrEo0R0)
+[Transmission Control Protocol (TCP), Pamela Fox](https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:the-internet/xcae6f4a7ff015e7d:transporting-packets/a/transmission-control-protocol--tcp)
+
+[What are Syn Cookies and how are they used?, A10 Networks](https://youtu.be/ymttSrEo0R0)
+
+[A Review of P4 Programmable Data Planes for Network Security, Ya Geo, Zhenling Wang](https://downloads.hindawi.com/journals/misy/2021/1257046.pdf)
+
+[What is a programmable data plane and where does P4 fit in?, David Jacobs](https://www.techtarget.com/searchnetworking/answer/What-is-a-programmable-data-plane-and-where-does-P4-fit-in)
+
