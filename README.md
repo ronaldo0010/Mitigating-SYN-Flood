@@ -13,19 +13,19 @@ Header contains
 
 ![](https://cdn.kastatic.org/ka-perseus-images/d09f9d37ff2a2deb21a8822f8c99ba6b86319f0b.svg)
 
-This process is the 3-way handshaketo establish a Client-Server connection.
+This process is the 3-way handshake to establish a Client-Server connection [Fox, 2019]
 
 ## TCP SYN-Attack
 * Malicious client sends 1 part of 3-way handshake, SYN packet.
 * The server notices this flow, allocates resources for the connection
 * The server acknowledges by sending a TCP SYN ACK packet and continues waiting for the client's response.
 * The client continues sending these TCP/IP requests to establish various TCP connections.
-* Indefinitely, the server can run out of resources allocated for these connections - resulting in segfaults or deadlocks.
+* Indefinitely, the server can run out of resources allocated to these connections - resulting in deadlock, and possible valid TCP connections being dropped.
 
 ## Traditional SYN-Attack Mitigation Stragtegies
 ### Naive Strategies
 * Increased Server backlog
-  - Scaling the capasity of TCP stack storage.
+  - Scaling the capacity of TCP stack storage.
 * Reduced SYN timer
   - Decrease the time allowed between sending SYN-ACK and waiting to receive ACK.
 * Overwriting half-opened TCP Stack entries
@@ -41,13 +41,21 @@ These methods are proven to be ineffective [rfc4987, 2007] since the attacker co
   - Finally opens connection between client and server
   [A10 Networks, 2019]
 * Firewall & Proxy Filtering
-  - Ensures that only legitmate connections are established with the end user/server
+  - Ensures that only legitimate connections are established with the end user/server
   -  By handling the 3-way handshake on the firewall side and passing the connection via proxy to server [rfc4987, 2007].
   
 
-## But Why? Why use a P4 programmable dataplane? 
+## Why use a P4 programmable dataplane? 
+todo
 
 
 ## P4 SYN-Attack Mitigation Stragtegies
+todo
 
 
+## Sources
+[Transmission Control Protocol (TCP)](https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:the-internet/xcae6f4a7ff015e7d:transporting-packets/a/transmission-control-protocol--tcp)
+
+[RFC4987 - TCP SYN Flooding Attacks and Common Mitigations](https://datatracker.ietf.org/doc/html/rfc4987)
+
+[What are Syn Cookies and how are they used?] (https://youtu.be/ymttSrEo0R0)
