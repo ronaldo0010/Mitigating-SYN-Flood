@@ -45,7 +45,7 @@ These methods are proven to be ineffective [rfc4987, 2007] since the attacker co
   - Ensures that only legitimate connections are established with the end user/server
   -  By handling the 3-way handshake on the firewall side and passing the connection via proxy to server [rfc4987, 2007].
   
-
+# Newly added section
 ## P4 programmable dataplane
 Programmable dataplanes (PDP) enables network operators with a tool to change/modify the purpose of a network switch. 
 
@@ -60,7 +60,9 @@ Traditionally a SDN would handle packet forwarding but with a PDP the hardware g
 * Adaptable for new application scenarios.
 
 ### Limitations of PDP's
-  
+  * Although PDP is capable of doing computions it's at the expensive of throughput
+  * PDP's only supports simple arithmetic operations thus precalculations and/or approximations need to be loaded in a match-table or registers.
+  * Lacks correctness verification - developers writing code for forwarding behavior on the data plane of a pdp is not as knowledgeable as the equipment manufacturer
 
 ### Note worthy mentions - Use cases for PDP's
 * Traffic Measurement and -Engineering
@@ -87,7 +89,7 @@ Traditionally a SDN would handle packet forwarding but with a PDP the hardware g
 [Geo, 2021]
   
 
-## P4 SYN-Attack Mitigation Stragtegies
+## P4 SYN-Flood attack Mitigation Stragtegies
 todo
 
 
