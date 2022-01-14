@@ -122,20 +122,20 @@ Fig. above shows the simplicity of SYN-Authentication message exchange strategy.
 In the study [Scholz, 2020], the stack used to find if is possible to mitigate SYN-attacks with a programmable data plane is described below.
 
 ### Software Packet Processing Prototype
-* libmoon for SYN proxy prototype in software targeting Commercial Off The Shelf hardware.
+* `Libmoon` for SYN proxy prototype in software targeting Commercial Off The Shelf hardware.
   * Powerful and easy-to-use scripting on top of DPDK's packet handling.
-  * Proxy runsas userspace program.
+  * Proxy runs as userspace program.
   * TCP handshake done by proxy application.
   * Libmoon receive and process packet in batches.
 * Hash function
-  * Peudo-crytographic SipHash function for cookies and hashmap
-  * SipHash can be integrated with programmable software and hardware dataplanes. [Found here](https://www.net.in.tum.de/fileadmin/bibtex/publications/papers/2019-P4-workshop-hashing.pdf).
+  * Peudo-crytographic `SipHash` function for cookies and hashmap
+  * `SipHash` can be integrated with programmable software and hardware dataplanes. [Found here](https://www.net.in.tum.de/fileadmin/bibtex/publications/papers/2019-P4-workshop-hashing.pdf).
 * Connection State Tracking
-  * Garbage collection with second chance page replacement algorithm.
+  * Garbage collection with __second chance page replacement__ algorithm.
   * Each state extends two bits. If neither are in a set state, entry is inactive and removed.
 * SYN-Authentication
-  * Fixed size bitmap as Data Structure (DS) for whitelist.
-  * ForEach, two bits used for second-chance page replacement algorithm (total of 1GB for entire IPv4 address space).
+  * Fixed size `bitmap` as Data Structure (DS) for whitelist.
+  * ForEach, two bits used for second-chance page replacement algorithm for __total of 1GB for entire IPv4 address space__.
   * IPv6 whitelisting based on subnet or hash-based DS.
 * SYN-Cookies
   * Two hash maps (`active` and `history`) in conjunction
@@ -147,13 +147,36 @@ In the study [Scholz, 2020], the stack used to find if is possible to mitigate S
   * Inserts are exclusive to `active` map. 
 * Optimizations
   * Offloading feature of NIC used for checksum calculation.
-  * ForEach TCP packet received only one ation is performed resulting in one outgoing packet.
+  * ForEach TCP packet received only one action is performed resulting in one outgoing packet.
   
 ### Programmable Data Plane Prototype
+P4 enables rapid development cycles and creates portable implementations of network applications for ASIC, FPGA and SmartNIC data planes.
+* Realized Programs and Targets
+  * SYN cookie and SYN authentication strategies implemented with P4 program
+  * Test functionality using Mininet-based bmv2 P4 target switch.
+  * Small modifications to P4 programs due to using different P4 architecture models.
+  * Used Targets t4p4s since it uses the same underlying framework as libmoon implementation.
+  * Ported implementation to FPGA based data plane - Agilio Network Flow Processor (NFP)-4000 SmartNIC and NetFPGA SUME
+* Program Core
+  * Packets are parsed up to and incl. TCP header.
+  * MAC addresses are updated using a lookup table.
+  * Packets are modified to strategy used, TCP flags set and state stored by proxy.
+  * State is maintained as match-action table, requiring one lookup for each segment.
+  * IP addresses are swapped.
+  * TCP checksum is updated.
+  * Packet is transmitted (egress).
+* Cookie Calculation
+  * Integration of crytographic hash functions in P4 data planes is possible for software, NFP and FPGA targets.
+  * Integration of SipHash as an extern on the software target is possible as it can be added as a library to the hardware dependent t4p4s code.
+  * Alternatively, to a raw time-stamp access is by using a table containing a counter to represent a timestamp value which the control plane updates.
+* Whitelisting
+  * Match-action Table is used for whitelisting
+  * Data plane informs control plane via digest message when a flow or IP address should be whitelisted
+  * Control plane adds entry to whitelist table
+  * Alternatively, a bloom-filter DS built in regsters can be used. Complexity of implementing this approach makes it less appealing (evicting outdated entries, increased resource consumption of P4 program).
 
 ### Results
 Summary of the results obtained by [Scholz, 2020].
-
 
 ![text here](assets/cookie-v-auth.png)
 
@@ -163,6 +186,11 @@ Table shows how SYN-Cookie and SYN-Auth compares in a proxy setup.
 * Due to the 3-way handshake design, ACK segment cannot be differentiated from third segment of handshake, proxy has to check every segment against whitelist. 
 
 ## Conclusion 
+The client puzzle (including a cryptographic hash value to packet) is the best defense strategy. This guarantees no malicious connections to be established with server.
+A more scalable solution is a stand alone SYN-proxy running on a dedicated node. This would allow protection for entire networks without decreased server performance. The study finds a scaled version of their prototype implementation to mitigate SYN-Flood attacks at 10 GbE line-rate.
+
+The P4 solution is easier to implement and can be ported to different target platforms, particularly hardware devices which achieve lower latency with less or no outliers.
+
 From [Scholz, 2020](https://arxiv.org/pdf/2003.03221.pdf), We conclude that effective and efficient SYN flood mititation on modern data planes is possible. 
 SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SYN-auth implementation makes it a more attractive solution. However, a limiting fator this solution is finding a suitable cryptographic hash function but could be solved thanks to recent developments in hash operations being implemented in hardware - like demonstrated by Bitcoin. This would allow for powerful data plane centric SYN-Flood mitigation. 
 
