@@ -16,10 +16,10 @@ Header contains
 This process is the 3-way handshake to establish a Client-Server connection [Fox, 2019]
 
 ## TCP SYN-Attack
-* Malicious client sends 1 part of 3-way handshake, SYN packet.
+* Malicious client sends 1 part of 3-way handshake, SYN segment.
 * The server notices this flow, allocates resources for the connection
-* The server acknowledges by sending a TCP SYN ACK packet and continues waiting for the client's response.
-* The client continues sending these TCP/IP requests to establish various TCP connections.
+* The server acknowledges by sending a TCP SYN ACK segment and continues waiting for the client's response.
+* The client continues sending these TCP/IP segments to establish various TCP connections.
 * Indefinitely, the server can run out of resources allocated to these connections - resulting in deadlock, and possible valid TCP connections being dropped.
   [Scholz, 2020]
 
@@ -30,14 +30,14 @@ This process is the 3-way handshake to establish a Client-Server connection [Fox
 * Reduced SYN timer
   - Decrease the time allowed between sending SYN-ACK and waiting to receive ACK.
 * Overwriting half-opened TCP Stack entries
-  - Replace oldest half-opened connection with incoming SYN packet 
+  - Replace oldest half-opened connection with incoming SYN segment 
 
-These methods are proven to be ineffective [rfc4987, 2007] since the attacker could easily linearily scale the frequency of SYN-packets sent.
+These methods are proven to be ineffective [rfc4987, 2007] since the attacker could easily linearily scale the frequency of SYN-segments sent.
 
 ### More Reliable Strategies
 * SYN-cookies
   - Uses a hidden cryptographic hash function to compete and store a secrete key. 
-  - Function of the timestamp and source- and destination address of the received SYN-packet.
+  - Function of the timestamp and source- and destination address of the received SYN-segment.
   - Only adds an entry to the TCP stack once the final ACK is received and corresponds with the hash value stored.
   - Finally opens connection between client and server
   [A10 Networks, 2019]
@@ -51,8 +51,8 @@ Programmable data planes (PDP) enables network operators with a tool to change/m
 
 Traditionally a SDN would handle packet forwarding but with a PDP the hardware gets utilized for this purpose with a significant increase in performance [Jacobs, 2019].
 
-### PPPP - Alien sounds or revolutionary developer tool?
-P4 is a programming language for controlling packet forwarding planes in network devices. It is open source and maintained by P4 Language Consortium (https://p4.org/) and acronym PPPP stands for Programming Protocol-Independent Packet Processors.
+### PPPP - Alien communication or revolutionary developer tool?
+The acronym PPPP stands for Programming Protocol-Independent Packet Processors. P4 is a programming language for controlling packet forwarding planes in network devices. It is open source and maintained by the P4 Language Consortium (https://p4.org/).
 
 ### Putting the pro in programmable - advantages of PDP
 * Check and modify packet headers s.t custom requirements [Gao, 2021].
@@ -93,13 +93,36 @@ P4 is a programming language for controlling packet forwarding planes in network
   
 
 ## P4 SYN-Flood attack Mitigation Stragtegies
-todo
+
+The concept of a SYN-Proxy is based on the idea of intercepting potentially harmful traffic before it reaches the server. 
+In addition, installing a dedicated SYN-Proxy allows the server to save resources by not handling attack mitigations itself.
+
+According to [Scholz, 2020](https://www.net.in.tum.de/fileadmin/bibtex/publications/papers/2020-p4-syn-proxy.pdf) only the following strategies provide adequate protection and high service quality: 
+* SYN-Cookie 
+* SYN-Auth with cryptographic hash 
+* SYN-Auth without cryptographic hash 
+
+### SYN-Cookie 
+* Secured with a cryptographic hash bound to the flow
+* expects a appropriate final segment of TCP handshake
+* On Completetion connection is forwarded to the aplication
+
+![text here](assets/SYN-cookie.png)
+  
+### SYN-Authentication
+* Whitelists the client or client's subnet on completetion
+* Accepts future connections from source or subnet
+* Can be combined with a cryptographic hash 
+  
+![text here](assets/Auth_cookie.png)
+
 
 
 ## Sources
 [A Review of P4 Programmable Data Planes for Network Security, Ya Geo, Zhenling Wang](https://downloads.hindawi.com/journals/misy/2021/1257046.pdf)
 
 [Me Love (SYN-)Cookies: SYN Flood Mitigation in Programmable Data Planes, Scholz Et Al.](https://arxiv.org/pdf/2003.03221.pdf)
+
 
 [TCP SYN Flooding Attacks and Common Mitigations, RFC4987](https://datatracker.ietf.org/doc/html/rfc4987)
 
