@@ -23,7 +23,7 @@ This process is the 3-way handshake to establish a Client-Server connection [Fox
 * Indefinitely, the server can run out of resources allocated to these connections - resulting in deadlock, and possible valid TCP connections being dropped.
   [Scholz, 2020]
 
-## Traditional SYN-Attack Mitigation Stragtegies
+## Traditional SYN-Attack Mitigation Strategies
 ### Naive Strategies
 * Increased Server backlog
   * Scaling the capacity of TCP stack storage.
@@ -32,7 +32,7 @@ This process is the 3-way handshake to establish a Client-Server connection [Fox
 * Overwriting half-opened TCP Stack entries
   * Replace oldest half-opened connection with incoming SYN segment. 
 
-These methods are proven to be ineffective [rfc4987, 2007] since the attacker could easily linearily scale the frequency of SYN-segments sent.
+These methods are proven to be ineffective [rfc4987, 2007] since the attacker could easily linearly scale the frequency of SYN-segments sent.
 
 ### More Reliable Strategies
 * SYN-cookies
@@ -57,16 +57,16 @@ The acronym PPPP stands for Programming Protocol-Independent Packet Processors. 
 * Encapsulate and forward packets with a non-IP protocol defined via an IP network [Jacobs, 2019].
 * Utilize hardware speeds (100 Gb/s) to perform tasks.
 * Load balancing, comms with other devices via controller [Geo, 2021].
-* More Cost-effective (time and monetary) than purpose spesific chips.
+* More Cost-effective (time and monetary) than purpose specific chips.
 * Adaptable for new application scenarios.
-* Apply resources acording to case requirements.
+* Apply resources according to case requirements.
 
 ### Limitations of PDP's
-  * Although PDP is capable of doing computions it's at the expense of throughput.
+  * Although PDP is capable of doing competitions it's at the expense of throughput.
   * PDP's only supports simple arithmetic operations thus precalculations and/or approximations need to be loaded in a match-table or registers.
   * Lacks correctness verification - developers writing code for forwarding behavior on the data plane of a pdp is not as knowledgeable as the equipment manufacturer.
 
-### Note worthy mentions - Use cases for PDP's
+### Noteworthy mentions - Use cases for PDP's
 * Traffic Measurement and -Engineering
   * Congestion detection
   * Active queue management
@@ -80,7 +80,7 @@ The acronym PPPP stands for Programming Protocol-Independent Packet Processors. 
   * IoT
   * Time-sensitive networks  
 * Network Security
-  * Instrusion detection
+  * Intrusion detection
   * Encryption
   * DDos attack mitigation [project focus]
   * Topology scrammingling
@@ -90,7 +90,7 @@ The acronym PPPP stands for Programming Protocol-Independent Packet Processors. 
 
 [Geo, 2021]
 
-## P4 SYN-Flood attack Mitigation Stragtegies
+## P4 SYN-Flood attack Mitigation Strategies
 The concept of a SYN-Proxy is based on the idea of intercepting potentially harmful traffic before it reaches the server. 
 In addition, installing a dedicated SYN-Proxy allows the server to save resources by not handling attack mitigations itself.
 
@@ -101,15 +101,15 @@ According to [Scholz, 2020] only the following strategies provide adequate prote
 
 ### SYN-Cookie 
 * Secured with a cryptographic hash bound to the flow.
-* expects a appropriate final segment of TCP handshake.
-* On Completetion connection is forwarded to the aplication.
+* expects an appropriate final segment of TCP handshake.
+* On Completion connection is forwarded to the application.
 
 ![text here](assets/SYN-cookie.png)
 
 Fig. above shows SYN-Cookie message exchange strategy.
   
 ### SYN-Authentication
-* Whitelists the client or client's subnet on completetion.
+* Whitelists the client or client's subnet on completion.
 * Accepts future connections from source or subnet.
 * Can be combined with a cryptographic hash.
   
@@ -118,16 +118,16 @@ Fig. above shows SYN-Cookie message exchange strategy.
 Fig. above shows the simplicity of SYN-Authentication message exchange strategy.
 
 ## The Setup
-In the study [Scholz, 2020], the stack used to find if is possible to mitigate SYN-attacks with a programmable data plane is described below.
+In the study [Scholz, 2020], the stack used to find if it is possible to mitigate SYN-attacks with a programmable data plane is described below.
 
 ### Software Packet Processing Prototype
 * `Libmoon` for SYN proxy prototype in software targeting Commercial Off The Shelf hardware.
   * Powerful and easy-to-use scripting on top of DPDK's packet handling.
   * Proxy runs as userspace program.
   * TCP handshake done by proxy application.
-  * Libmoon receive and process packet in batches.
+  * Libmoon receives and processes packets in batches.
 * Hash function
-  * Peudo-crytographic `SipHash` function for cookies and hashmap
+  * Peudo-cryptographic `SipHash` function for cookies and hashmap
   * `SipHash` can be integrated with programmable software and hardware dataplanes. [Found here](https://www.net.in.tum.de/fileadmin/bibtex/publications/papers/2019-P4-workshop-hashing.pdf).
 * Connection State Tracking
   * Garbage collection with __second chance page replacement__ algorithm.
@@ -141,7 +141,7 @@ In the study [Scholz, 2020], the stack used to find if is possible to mitigate S
   * `history` replace is periodically deleted and replace by an `active` map, and new empty active hash map is initialized.
   * 2-phase lookup - First `active` map is checked. 
   * If entry exists it is returned. 
-  * Else same lookup is done in `history` map and entry is copied to `active` and employing the second chance mechanism. 
+  * Else same lookup is done in `history` map and entry is copied to `active` and employs the second chance mechanism. 
   * Else if no entry is found the connection is assumed to not exist. 
   * Inserts are exclusive to `active` map. 
 * Optimizations
@@ -160,33 +160,33 @@ P4 enables rapid development cycles and creates portable implementations of netw
   * Packets are parsed up to and incl. TCP header.
   * MAC addresses are updated using a lookup table.
   * Packets are modified to strategy used, TCP flags set and state stored by proxy.
-  * State is maintained as match-action table, requiring one lookup for each segment.
+  * State is maintained as a match-action table, requiring one lookup for each segment.
   * IP addresses are swapped.
   * TCP checksum is updated.
   * Packet is transmitted (egress).
 * Cookie Calculation
-  * Integration of crytographic hash functions in P4 data planes is possible for software, NFP and FPGA targets.
+  * Integration of cryptographic hash functions in P4 data planes is possible for software, NFP and FPGA targets.
   * Integration of SipHash as an extern on the software target is possible as it can be added as a library to the hardware dependent t4p4s code.
   * Alternatively, to a raw time-stamp access is by using a table containing a counter to represent a timestamp value which the control plane updates.
 * Whitelisting
   * Match-action Table is used for whitelisting
   * Data plane informs control plane via digest message when a flow or IP address should be whitelisted
   * Control plane adds entry to whitelist table
-  * Alternatively, a bloom-filter DS built in regsters can be used. Complexity of implementing this approach makes it less appealing (evicting outdated entries, increased resource consumption of P4 program).
+  * Alternatively, a bloom-filter DS built in registers can be used. Complexity of implementing this approach makes it less appealing (evicting outdated entries, increased resource consumption of P4 program).
 
 
-## VT role in flow montitoring application
+## VT role in flow monitoring application
 ![text here](assets/tap.jpeg)
 
-On a probe flow records are created for every SYN-packet received, If A wants to flood B's server and VT is in the middle. Without protection VT's montoring system/probe will also be flooded. To prevent this from happening VT can:
+On a probe flow records are created for every SYN-packet received, If A wants to flood B's server and VT is in the middle. Without protection VT's monitoring system/probe will also be flooded. To prevent this from happening VT can:
 
 - Deploy a PDP between the network tap and -Probe
 - Program PDP s.t only ACK-packets and all packets from whitelisted source are allowed to reach Network Probe
-- Add the source address of the ACK packet (on the Probe) to a whitelist if list does not contain current packet-source. 
+- Add the source address of the ACK packet (on the Probe) to a whitelist if the list does not contain the current packet-source.
 - Add a counter on PDP keeps track of amount of SYN-packets received.
 - Add a counter on Probe keeps track of amount of ACK-packets received
 - If # SYN != # Ack, then VT knows that a Server is under-attack and inform target server operators (dalk nie moontlik nie, since flood could happen in < 13 min [Sandre](https://www.researchgate.net/publication/241631418_The_effects_of_DDoS_attacks_on_flow_monitoring_applications) )
-- Goal-spesific NIC on Probe might be needed s.t only ACK-packets are expected. 
+- Goal-specific NIC on Probe might be needed s.t only ACK-packets are expected. 
 
 ### Results
 Summary of the results obtained by [Scholz, 2020].
@@ -204,7 +204,7 @@ A more scalable solution is a stand alone SYN-proxy running on a dedicated node.
 
 The P4 solution is easier to implement and can be ported to different target platforms, particularly hardware devices which achieve lower latency with less or no outliers.
 
-From [Scholz, 2020](https://arxiv.org/pdf/2003.03221.pdf), We conclude that effective and efficient SYN flood mititation on modern data planes is possible. 
+From [Scholz, 2020](https://arxiv.org/pdf/2003.03221.pdf), We conclude that effective and efficient SYN flood mitigation on modern data planes is possible. 
 SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SYN-auth implementation makes it a more attractive solution. However, a limiting factor for this solution is finding a suitable cryptographic hash function, but could be solved thanks to recent developments in hash operations being implemented in hardware. This would allow for powerful data plane centric SYN-Flood mitigation. 
 
 
