@@ -214,6 +214,8 @@ SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SY
 
 [TCP SYN Flooding Attacks and Common Mitigations, RFC4987](https://datatracker.ietf.org/doc/html/rfc4987)
 
+[The effects of DDoS attacks on flow monitoring applications, Sandre, et al.](https://www.researchgate.net/publication/241631418_The_effects_of_DDoS_attacks_on_flow_monitoring_applications)
+
 [Transmission Control Protocol (TCP), Pamela Fox](https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:the-internet/xcae6f4a7ff015e7d:transporting-packets/a/transmission-control-protocol--tcp)
 
 [What are Syn Cookies and how are they used?, A10 Networks](https://youtu.be/ymttSrEo0R0)
