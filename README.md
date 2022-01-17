@@ -49,21 +49,20 @@ These methods are proven to be ineffective [rfc4987, 2007] since the attacker co
 ## P4 programmable data plane
 Programmable data planes (PDP) enables network operators with a tool to change/modify the purpose of a network switch. 
 
-Traditionally a SDN would handle packet forwarding but with a PDP the hardware gets utilized for this purpose with a significant increase in performance [Jacobs, 2019].
-
-### PPPP - Alien communication or revolutionary developer tool?
+### PPPP - Alien communication or new data plane tool?
 The acronym PPPP stands for Programming Protocol-Independent Packet Processors. P4 is a programming language for controlling packet forwarding planes in network devices. It is open source and maintained by the P4 Language Consortium (https://p4.org/).
 
 ### Putting the pro in programmable - advantages of PDP
 * Check and modify packet headers s.t custom requirements [Gao, 2021].
 * Encapsulate and forward packets with a non-IP protocol defined via an IP network [Jacobs, 2019].
 * Utilize hardware speeds (100 Gb/s) to perform tasks.
-* Load balancing, limiting ingress (?) speeds, comms with other devices via controller [Geo, 2021].
+* Load balancing, comms with other devices via controller [Geo, 2021].
 * More Cost-effective (time and monetary) than purpose spesific chips.
 * Adaptable for new application scenarios.
+* Apply resources acording to case requirements.
 
 ### Limitations of PDP's
-  * Although PDP is capable of doing computions it's at the expensive of throughput.
+  * Although PDP is capable of doing computions it's at the expense of throughput.
   * PDP's only supports simple arithmetic operations thus precalculations and/or approximations need to be loaded in a match-table or registers.
   * Lacks correctness verification - developers writing code for forwarding behavior on the data plane of a pdp is not as knowledgeable as the equipment manufacturer.
 
@@ -87,7 +86,7 @@ The acronym PPPP stands for Programming Protocol-Independent Packet Processors. 
   * Topology scrammingling
 * Network Accelerated Computing
   * Machine learning
-  * Deep [packet (?)] detection
+  * Assist Deep packet inspection
 
 [Geo, 2021]
 
@@ -174,6 +173,19 @@ P4 enables rapid development cycles and creates portable implementations of netw
   * Data plane informs control plane via digest message when a flow or IP address should be whitelisted
   * Control plane adds entry to whitelist table
   * Alternatively, a bloom-filter DS built in regsters can be used. Complexity of implementing this approach makes it less appealing (evicting outdated entries, increased resource consumption of P4 program).
+
+
+## VT role in flow montitoring application
+![text here](assets/tap.jpeg)
+
+On a probe flow records are created for every SYN-packet received, If A wants to flood B's server and VT is in the middle. Without protection VT's montoring system/probe will also be flooded. To prevent this from happening VT can:
+
+- Deploy a PDP between the network tap and -Probe
+- Program PDP s.t only ACK-packets are allowed to reach Network Probe
+- Add a counter on PDP keeps track of amount of SYN-packets received.
+- Add a counter on Probe keeps track of amount of ACK-packets received
+- If # SYN != # Ack, then VT knows that a Server is under-attack and inform target server operators (dalk nie moontlik nie, since flood could happen in < 13 min [Sandre](https://www.researchgate.net/publication/241631418_The_effects_of_DDoS_attacks_on_flow_monitoring_applications) )
+- Goal-spesific NIC on Probe might be needed s.t only ACK-packets are expected. 
 
 ### Results
 Summary of the results obtained by [Scholz, 2020].
