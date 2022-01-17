@@ -181,7 +181,8 @@ P4 enables rapid development cycles and creates portable implementations of netw
 On a probe flow records are created for every SYN-packet received, If A wants to flood B's server and VT is in the middle. Without protection VT's montoring system/probe will also be flooded. To prevent this from happening VT can:
 
 - Deploy a PDP between the network tap and -Probe
-- Program PDP s.t only ACK-packets are allowed to reach Network Probe
+- Program PDP s.t only ACK-packets and all packets from whitelisted source are allowed to reach Network Probe
+- Add the source address of the ACK packet (on the Probe) to a whitelist if list does not contain current packet-source. 
 - Add a counter on PDP keeps track of amount of SYN-packets received.
 - Add a counter on Probe keeps track of amount of ACK-packets received
 - If # SYN != # Ack, then VT knows that a Server is under-attack and inform target server operators (dalk nie moontlik nie, since flood could happen in < 13 min [Sandre](https://www.researchgate.net/publication/241631418_The_effects_of_DDoS_attacks_on_flow_monitoring_applications) )
@@ -204,7 +205,7 @@ A more scalable solution is a stand alone SYN-proxy running on a dedicated node.
 The P4 solution is easier to implement and can be ported to different target platforms, particularly hardware devices which achieve lower latency with less or no outliers.
 
 From [Scholz, 2020](https://arxiv.org/pdf/2003.03221.pdf), We conclude that effective and efficient SYN flood mititation on modern data planes is possible. 
-SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SYN-auth implementation makes it a more attractive solution. However, a limiting fator this solution is finding a suitable cryptographic hash function but could be solved thanks to recent developments in hash operations being implemented in hardware - like demonstrated by Bitcoin. This would allow for powerful data plane centric SYN-Flood mitigation. 
+SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SYN-auth implementation makes it a more attractive solution. However, a limiting factor for this solution is finding a suitable cryptographic hash function, but could be solved thanks to recent developments in hash operations being implemented in hardware. This would allow for powerful data plane centric SYN-Flood mitigation. 
 
 
 ## Sources
