@@ -3,6 +3,8 @@
 #include <v1model.p4>
 
 const bit<16> TYPE_IPV4 = 0x800;
+const bit<8>  TYPE_TCP  = 6;
+
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -33,6 +35,26 @@ header ipv4_t {
     ip4Addr_t dstAddr;
 }
 
+header tcp_t{
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<32> seqNo;
+    bit<32> ackNo;
+    bit<4>  dataOffset;
+    bit<4>  res;
+    bit<1>  cwr;
+    bit<1>  ece;
+    bit<1>  urg;
+    bit<1>  ack;
+    bit<1>  psh;
+    bit<1>  rst;
+    bit<1>  syn;
+    bit<1>  fin;
+    bit<16> window;
+    bit<16> checksum;
+    bit<16> urgentPtr;
+}
+
 struct metadata {
     /* empty */
 }
@@ -40,8 +62,9 @@ struct metadata {
 struct headers {
     ethernet_t   ethernet;
     ipv4_t       ipv4;
-}
+    tcp_t        tcp;
 
+}
 /*************************************************************************
 *********************** P A R S E R  ***********************************
 *************************************************************************/
@@ -66,7 +89,15 @@ parser MyParser(packet_in packet,
     
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
-        transition accept;
+        transition select(hdr.ipv4.protocol){
+            TYPE_TCP: tcp;
+            default: accept;
+        }
+    }
+
+    state tcp {
+       packet.extract(hdr.tcp);
+       transition accept;
     }
 }
 
@@ -92,7 +123,7 @@ control MyIngress(inout headers hdr,
     }
     
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
-        /* TODO: fill out code in action body */
+        /* fill out code in action body */
         standard_metadata.egress_spec = port;
         
         // source gets switch address 
@@ -168,6 +199,8 @@ control MyDeparser(packet_out packet, in headers hdr) {
         /* add deparser logic */
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
+
     }
 }
 
