@@ -125,7 +125,6 @@ control MyIngress(inout headers hdr,
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         /* fill out code in action body */
         standard_metadata.egress_spec = port;
-        
         // source gets switch address 
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         // dest gets dest address
