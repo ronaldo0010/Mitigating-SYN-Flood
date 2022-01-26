@@ -1,1 +1,0 @@
-sudo nping --tcp -c 300000 10.0.2.2 -p 24 --delay 0.01ms

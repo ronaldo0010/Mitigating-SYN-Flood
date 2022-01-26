@@ -1,0 +1,1 @@
+sudo nping -c 500 --tcp -flags SYN 10.0.1.1 -p 80 --delay 30ms --ttl 64

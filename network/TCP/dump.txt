@@ -1,0 +1,26 @@
+
+Starting Nping 0.7.80 ( https://nmap.org/nping ) at 2022-01-25 11:50 SAST
+SENT (0.0574s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.0727s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.0777s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.0923s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.0977s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.1007s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.1178s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+SENT (0.1379s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.1400s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+RCVD (0.1425s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.1579s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+SENT (0.1780s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.1961s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+RCVD (0.1962s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.1980s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.2141s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.2182s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.2215s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+SENT (0.2383s) TCP 192.168.101.108:13829 > 10.0.2.2:24 S ttl=2 id=32711 iplen=40  seq=3728371771 win=1480 
+RCVD (0.2697s) ICMP [41.193.120.244 > 192.168.101.108 TTL=0 during transit (type=11/code=0) ] IP [ttl=254 id=0 iplen=56 ]
+ 
+Max rtt: 31.426ms | Min rtt: 2.101ms | Avg rtt: 12.648ms
+Raw packets sent: 10 (400B) | Rcvd: 10 (560B) | Lost: 0 (0.00%)
+Nping done: 1 IP address pinged in 0.31 seconds
