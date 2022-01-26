@@ -118,6 +118,10 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
+    // counter for tcp packets
+    counter(3, CounterType.packets) ctr;
+
+
     action drop() {
         mark_to_drop(standard_metadata);
     }
@@ -133,6 +137,17 @@ control MyIngress(inout headers hdr,
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
     
+    /*
+     *   0    1      2
+     * [SYN, ACK, SYN-ACK]
+     *
+     */
+    action count_p(bit<32> i) {
+        ctr.count(i);
+    }
+
+    
+
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -147,10 +162,29 @@ control MyIngress(inout headers hdr,
     }
     
     apply {
+        if (hdr.tcp.isValid()) {
+            if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
+                count_p(0);
+                drop();
+            } else if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
+                count_p(1);
+
+                /*
+                if (check_list()) {
+                    
+                }
+                */
+            } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
+                count_p(3);
+                drop();
+            }
+        }
+
         // ipv4_lpm should be applied only when IPv4 header is valid
         if (hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
         }
+
     }
 }
 
