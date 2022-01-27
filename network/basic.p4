@@ -125,7 +125,7 @@ control MyIngress(inout headers hdr,
     // BLOOM_FILTER_BIT_WIDTH = 1
     register<bit<1>>(BLOOM_FILTER_ENTRIES) bloom_filter;
     
-    bit<32> reg_one;
+    bit<32> reg_one = 0;
     bit<1> reg_val = 0;
 
 
@@ -179,28 +179,33 @@ control MyIngress(inout headers hdr,
     
     apply {
         if (hdr.tcp.isValid()) {
-            // compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
-            
-            /*
+            compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
+          
+            //    ############### ############ ###############
+            //    ############### filter works ############### 
+
             if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
                 count_p(0);
-                drop();
+                //drop();
             } else if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                 count_p(1);
-                bloom_filter_1.write(reg_one, 1);
-                ipv4_lpm.apply();
+                bloom_filter.write(reg_one, 1);
+                //ipv4_lpm.apply();
             } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
                 count_p(3);
-                drop();
+                //drop();
             }
-            */
+            //    ############### filter works ############### 
+            //    ############### ############ ###############
+    
+            /*
             if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                 count_p(1);
-                // bloom_filter.write(reg_one, 1);
-                // ipv4_lpm.apply();
+                bloom_filter.write(reg_one, 1);
+                ipv4_lpm.apply();
             }
             else {
-                // bloom_filter.read(reg_val, reg_one);
+                bloom_filter.read(reg_val, reg_one);
                 
                 if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
                     count_p(0);
@@ -213,13 +218,26 @@ control MyIngress(inout headers hdr,
                     drop();
 
                 }
-                /*
+                
                 if (reg_val == 0) {
                     drop();
                 } else {
                     ipv4_lpm.apply();
                 }
-                */
+                
+            }
+            */
+            if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
+                bloom_filter.write(reg_one, 1);
+            }
+            else {
+                bloom_filter.read(reg_val, reg_one);
+                
+                if (reg_val == 0) {
+                    drop();
+                } else {
+                    ipv4_lpm.apply();
+                }
             }
         }
     }
