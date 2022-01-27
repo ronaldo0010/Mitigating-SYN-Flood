@@ -179,7 +179,8 @@ control MyIngress(inout headers hdr,
     
     apply {
         if (hdr.tcp.isValid()) {
-            compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
+            // compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
+            
             /*
             if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
                 count_p(0);
@@ -195,24 +196,30 @@ control MyIngress(inout headers hdr,
             */
             if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                 count_p(1);
-                bloom_filter.write(reg_one, 1);
-                //ipv4_lpm.apply();
+                // bloom_filter.write(reg_one, 1);
+                // ipv4_lpm.apply();
             }
             else {
-                bloom_filter.read(reg_val, reg_one);
+                // bloom_filter.read(reg_val, reg_one);
                 
                 if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
-                   count_p(0);
+                    count_p(0);
+                    drop();
+
                 }
 
                 else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
                     count_p(3);
+                    drop();
+
                 }
+                /*
                 if (reg_val == 0) {
                     drop();
                 } else {
                     ipv4_lpm.apply();
                 }
+                */
             }
         }
     }
