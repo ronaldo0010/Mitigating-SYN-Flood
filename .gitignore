@@ -31,3 +31,5 @@ logs/
 
 # IntelliJ / PyCharm
 .idea/
+
+utils/
