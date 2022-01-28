@@ -176,76 +176,7 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = NoAction();
     }
-    /*
     
-    
-    apply {
-        if (hdr.tcp.isValid()) {
-            compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
-          
-            //    ############### ############ ###############
-            //    ############### filter works ############### 
-
-            if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
-                count_p(0);
-                //drop();
-            } else if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
-                count_p(1);
-                bloom_filter.write(reg_one, 1);
-                //ipv4_lpm.apply();
-            } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
-                count_p(3);
-                //drop();
-            }
-            //    ############### filter works ############### 
-            //    ############### ############ ###############
-    
-            ///////////////////
-            if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
-                count_p(1);
-                bloom_filter.write(reg_one, 1);
-                ipv4_lpm.apply();
-            }
-            else {
-                bloom_filter.read(reg_val, reg_one);
-                
-                if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
-                    count_p(0);
-                    drop();
-
-                }
-
-                else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
-                    count_p(3);
-                    drop();
-
-                }
-                
-                if (reg_val == 0) {
-                    drop();
-                } else {
-                    ipv4_lpm.apply();
-                }
-                
-            }
-            ////////////////
-            if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
-                bloom_filter.write(reg_one, 1);
-            }
-            else {
-                bloom_filter.read(reg_val, reg_one);
-                
-                if (reg_val == 0) {
-                    drop();
-                } else {
-                    ipv4_lpm.apply();
-                }
-            }
-        }
-    }
-    
-    
-    */
     apply {
         if (hdr.tcp.isValid()) {
             compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
@@ -318,8 +249,8 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         /* add deparser logic */
         packet.emit(hdr.ethernet);
-        packet.emit(hdr.tcp);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
 
     }
 }
