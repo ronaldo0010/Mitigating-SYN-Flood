@@ -176,6 +176,8 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = NoAction();
     }
+    /*
+    
     
     apply {
         if (hdr.tcp.isValid()) {
@@ -198,7 +200,7 @@ control MyIngress(inout headers hdr,
             //    ############### filter works ############### 
             //    ############### ############ ###############
     
-            /*
+            ///////////////////
             if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                 count_p(1);
                 bloom_filter.write(reg_one, 1);
@@ -226,7 +228,7 @@ control MyIngress(inout headers hdr,
                 }
                 
             }
-            */
+            ////////////////
             if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                 bloom_filter.write(reg_one, 1);
             }
@@ -240,6 +242,36 @@ control MyIngress(inout headers hdr,
                 }
             }
         }
+    }
+    
+    
+    */
+    apply {
+        if (hdr.tcp.isValid()) {
+            compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
+
+            // If ack, add to whitelisted
+            if (hdr.tcp.ack == 1 && hdr.tcp.syn == 0) {
+                bloom_filter.write(reg_one, 1);
+            } else {
+                // read whitelist
+                bloom_filter.read(reg_val, reg_one);
+            }
+            
+            // Counter for Headers
+            if (reg_val == 0) {
+                drop();
+            } else {
+                if(hdr.tcp.syn == 1 && hdr.tcp.ack == 0) {
+                    count_p(0);
+                } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 0) {
+                    count_p(1);
+                } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
+                    count_p(2);
+                }
+                ipv4_lpm.apply();
+            }
+        }    
     }
 }
 
@@ -286,8 +318,8 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         /* add deparser logic */
         packet.emit(hdr.ethernet);
-        packet.emit(hdr.ipv4);
         packet.emit(hdr.tcp);
+        packet.emit(hdr.ipv4);
 
     }
 }
