@@ -12,6 +12,7 @@
 !*-runtime.json
 
 *.pcap
+!dump.pcap
 
 # Extracted solutions
 solution*/
@@ -32,4 +33,5 @@ logs/
 # IntelliJ / PyCharm
 .idea/
 
+# mininet untils
 utils/

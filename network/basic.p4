@@ -181,21 +181,20 @@ control MyIngress(inout headers hdr,
         if (hdr.tcp.isValid()) {
             compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
 
-            // If ack, add to whitelisted
+            // If ack add ip to whitelisted
             if (hdr.tcp.ack == 1 && hdr.tcp.syn == 0) {
                 bloom_filter.write(reg_one, 1);
-            } else {
-                // read whitelist
-                bloom_filter.read(reg_val, reg_one);
             }
+            // Checks if ip is whitelisted
+            bloom_filter.read(reg_val, reg_one);
             
             // Counter for Headers
             if (reg_val == 0) {
                 drop();
             } else {
-                if(hdr.tcp.syn == 1 && hdr.tcp.ack == 0) {
+                if(hdr.tcp.syn == 1 && hdr.tcp.ack != 1) {
                     count_p(0);
-                } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 0) {
+                } else if (hdr.tcp.ack == 1 && hdr.tcp.syn != 1) {
                     count_p(1);
                 } else if (hdr.tcp.ack == 1 && hdr.tcp.syn == 1) {
                     count_p(2);

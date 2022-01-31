@@ -208,7 +208,7 @@ From [Scholz, 2020](https://arxiv.org/pdf/2003.03221.pdf), We conclude that effe
 SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SYN-auth implementation makes it a more attractive solution. However, a limiting factor for this solution is finding a suitable cryptographic hash function, but could be solved thanks to recent developments in hash operations being implemented in hardware. This would allow for powerful data plane centric SYN-Flood mitigation. 
 
 
-## Sources
+## Sources 
 [A Review of P4 Programmable Data Planes for Network Security, Ya Geo, Zhenling Wang](https://downloads.hindawi.com/journals/misy/2021/1257046.pdf)
 
 [Me Love (SYN-)Cookies: SYN Flood Mitigation in Programmable Data Planes, Scholz Et Al.](https://arxiv.org/pdf/2003.03221.pdf)
@@ -223,3 +223,11 @@ SYN-cookies and SYN-auth perform equally well, moreover the simplicity of the SY
 
 [What is a programmable data plane and where does P4 fit in?, David Jacobs](https://www.techtarget.com/searchnetworking/answer/What-is-a-programmable-data-plane-and-where-does-P4-fit-in)
 
+## Helpful links
+[p4lang github](https://github.com/p4lang)
+
+[p4 discussion forum](https://forum.p4.org/)
+
+[P4_16 Language Specification](https://p4.org/p4-spec/docs/P4-16-v1.0.0-spec.html#sec-p4-type)
+
+[Scapy Docs](https://buildmedia.readthedocs.org/media/pdf/scapy/latest/scapy.pdf)
